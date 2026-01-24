@@ -1,10 +1,7 @@
-//{real executing commads}
-
 import '../service/lg_service.dart';
 
 class LGCommands {
-  //Button1: "SHOW LG LOGO (on left screen)"
-  static Future<void> showLogo() async {
+static Future<void> showLogo() async {
     await SSHService.execute("""
 echo '
 <kml xmlns="http://www.opengis.net/kml/2.2">
@@ -26,129 +23,65 @@ echo "http://lg1:81/kml/slave_3.kml" > /tmp/query.txt
 """);
   }
 
-  //Button2:"SHOW 3D COLORED PYRAMID"
- static Future<void> show3DPyramid() async {
-  await SSHService.execute("""
-echo '
+  // Button4: CLEAR LOGO
+  static Future<void> clearLogo() async {
+    // We overwrite slave_3.kml with an empty KML. 
+    // Slave 3 will detect the change and clear the logo.
+    await SSHService.execute("""
+echo '<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+  </Document>
+</kml>' > /var/www/html/kml/slave_3.kml
+""");
+  }
+
+  // Button2: SHOW PYRAMID (This MUST go to kmls.txt to be 3D)
+  static Future<void> show3DPyramid() async {
+    const String urlPrefix = "http://lg1:81";
+
+    await SSHService.execute("""
+echo '<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
 <Document>
   <name>3D Multi-Color Pyramid</name>
+  <Style id="red"><PolyStyle><color>7d0000ff</color></PolyStyle></Style>
+  <Style id="green"><PolyStyle><color>7d00ff00</color></PolyStyle></Style>
+  <Style id="blue"><PolyStyle><color>7dff0000</color></PolyStyle></Style>
+  <Style id="yellow"><PolyStyle><color>7d00ffff</color></PolyStyle></Style>
 
-  <!-- Styles -->
-  <Style id="red">
-    <PolyStyle><color>7d0000ff</color></PolyStyle>
-  </Style>
-  <Style id="green">
-    <PolyStyle><color>7d00ff00</color></PolyStyle>
-  </Style>
-  <Style id="blue">
-    <PolyStyle><color>7dff0000</color></PolyStyle>
-  </Style>
-  <Style id="yellow">
-    <PolyStyle><color>7d00ffff</color></PolyStyle>
-  </Style>
-
-  <!-- Side 1 -->
-  <Placemark>
-    <styleUrl>#red</styleUrl>
-    <Polygon>
-      <altitudeMode>relativeToGround</altitudeMode>
-      <outerBoundaryIs>
-        <LinearRing>
-          <coordinates>
-            77.0264,28.4593,0
-            77.0268,28.4593,0
-            77.0266,28.4595,200
-            77.0264,28.4593,0
-          </coordinates>
-        </LinearRing>
-      </outerBoundaryIs>
-    </Polygon>
-  </Placemark>
-
-  <!-- Side 2 -->
-  <Placemark>
-    <styleUrl>#green</styleUrl>
-    <Polygon>
-      <altitudeMode>relativeToGround</altitudeMode>
-      <outerBoundaryIs>
-        <LinearRing>
-          <coordinates>
-            77.0268,28.4593,0
-            77.0268,28.4597,0
-            77.0266,28.4595,200
-            77.0268,28.4593,0
-          </coordinates>
-        </LinearRing>
-      </outerBoundaryIs>
-    </Polygon>
-  </Placemark>
-
-  <!-- Side 3 -->
-  <Placemark>
-    <styleUrl>#blue</styleUrl>
-    <Polygon>
-      <altitudeMode>relativeToGround</altitudeMode>
-      <outerBoundaryIs>
-        <LinearRing>
-          <coordinates>
-            77.0268,28.4597,0
-            77.0264,28.4597,0
-            77.0266,28.4595,200
-            77.0268,28.4597,0
-          </coordinates>
-        </LinearRing>
-      </outerBoundaryIs>
-    </Polygon>
-  </Placemark>
-
-  <!-- Side 4 -->
-  <Placemark>
-    <styleUrl>#yellow</styleUrl>
-    <Polygon>
-      <altitudeMode>relativeToGround</altitudeMode>
-      <outerBoundaryIs>
-        <LinearRing>
-          <coordinates>
-            77.0264,28.4597,0
-            77.0264,28.4593,0
-            77.0266,28.4595,200
-            77.0264,28.4597,0
-          </coordinates>
-        </LinearRing>
-      </outerBoundaryIs>
-    </Polygon>
-  </Placemark>
-
+  <Placemark><styleUrl>#red</styleUrl><Polygon><altitudeMode>relativeToGround</altitudeMode><outerBoundaryIs><LinearRing><coordinates>77.0264,28.4593,0 77.0268,28.4593,0 77.0266,28.4595,200 77.0264,28.4593,0</coordinates></LinearRing></outerBoundaryIs></Polygon></Placemark>
+  <Placemark><styleUrl>#green</styleUrl><Polygon><altitudeMode>relativeToGround</altitudeMode><outerBoundaryIs><LinearRing><coordinates>77.0268,28.4593,0 77.0268,28.4597,0 77.0266,28.4595,200 77.0268,28.4593,0</coordinates></LinearRing></outerBoundaryIs></Polygon></Placemark>
+  <Placemark><styleUrl>#blue</styleUrl><Polygon><altitudeMode>relativeToGround</altitudeMode><outerBoundaryIs><LinearRing><coordinates>77.0268,28.4597,0 77.0264,28.4597,0 77.0266,28.4595,200 77.0268,28.4597,0</coordinates></LinearRing></outerBoundaryIs></Polygon></Placemark>
+  <Placemark><styleUrl>#yellow</styleUrl><Polygon><altitudeMode>relativeToGround</altitudeMode><outerBoundaryIs><LinearRing><coordinates>77.0264,28.4597,0 77.0264,28.4593,0 77.0266,28.4595,200 77.0264,28.4597,0</coordinates></LinearRing></outerBoundaryIs></Polygon></Placemark>
 </Document>
-</kml>
-' > /var/www/html/kml/pyramid.kml
+</kml>' > /var/www/html/kml/pyramid.kml
 
-echo "http://lg1:81/kml/pyramid.kml" > /tmp/query.txt
+echo "$urlPrefix/kml/pyramid.kml" > /var/www/html/kmls.txt
 """);
-}
 
+    // Wait for sync
+    await Future.delayed(const Duration(seconds: 2));
+    await flyToHomeCity();
+  }
 
-  // Button_3:"FLY TO HOME CITY" 
-  
+  // Button5: CLEAR PYRAMID (This cleans kmls.txt)
+  static Future<void> clearKml() async {
+    // 1. Clear kmls.txt so the Master stops broadcasting
+    // 2. Clear the file itself to be safe
+    await SSHService.execute("""
+echo '' > /var/www/html/kmls.txt
+echo '<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+  </Document>
+</kml>' > /var/www/html/kml/pyramid.kml
+""");
+  }
+
   static Future<void> flyToHomeCity() async {
     await SSHService.execute("""
-echo 'flytoview=<LookAt><longitude>77.0266</longitude><latitude>28.4595</latitude><altitude>0</altitude><heading>0</heading><tilt>45</tilt><range>300</range><altitudeMode>relativeToGround</altitudeMode></LookAt>' > /tmp/query.txt""");
-  }
-
-  // Button_4: "CLEAR LOGO"
-  static Future<void> clearLogo() async {
-    await SSHService.execute("""
-echo '' > /var/www/html/kml/slave_3.kml
-echo '' > /tmp/query.txt
-""");
-  }
-
-  //Button_5: "CLEAR KML"
-  static Future<void> clearKml() async {
-    await SSHService.execute("""
-echo '' > /var/www/html/kml/pyramid.kml
-echo '' > /tmp/query.txt
+echo "flytoview=<LookAt><longitude>77.0266</longitude><latitude>28.4595</latitude><altitude>0</altitude><heading>0</heading><tilt>45</tilt><range>300</range><altitudeMode>relativeToGround</altitudeMode></LookAt>" > /tmp/query.txt
 """);
   }
 }

@@ -1,0 +1,30 @@
+class LookAtKmlModel {
+  final double lng;
+  final double lat;
+  final String range;
+  final String tilt;
+  final String heading;
+  final String? altitude;
+  final String? altitudeMode;
+
+  LookAtKmlModel({
+    required this.lng,
+    required this.lat,
+    required this.range,
+    required this.tilt,
+    required this.heading,
+    this.altitude,
+    this.altitudeMode,
+  });
+
+  String get linearTag {
+    return '<LookAt>'
+        '<longitude>$lng</longitude>'
+        '<latitude>$lat</latitude>'
+        '${altitude != null ? '<altitude>$altitude</altitude>' : ''}'
+        '<heading>$heading</heading>'
+        '<tilt>$tilt</tilt>'
+        '<range>$range</range>'
+        '${altitudeMode != null ? '<altitudeMode>$altitudeMode</altitudeMode>' : ''}'
+        '</LookAt>';
+  }
