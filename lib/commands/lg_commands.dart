@@ -1,6 +1,7 @@
 import '../service/lg_service.dart';
 
 class LGCommands {
+   static String _x = "http://lg1:81";
 static Future<void> showLogo() async {
     await SSHService.execute("""
 echo '
@@ -18,15 +19,11 @@ echo '
   </Document>
 </kml>
 ' > /var/www/html/kml/slave_3.kml
-
-echo "http://lg1:81/kml/slave_3.kml" > /tmp/query.txt
+echo "$_x/kml/slave_3.kml" > /tmp/query.txt
 """);
   }
 
-  // Button4: CLEAR LOGO
   static Future<void> clearLogo() async {
-    // We overwrite slave_3.kml with an empty KML. 
-    // Slave 3 will detect the change and clear the logo.
     await SSHService.execute("""
 echo '<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
@@ -35,11 +32,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>
 </kml>' > /var/www/html/kml/slave_3.kml
 """);
   }
-
-  // Button2: SHOW PYRAMID (This MUST go to kmls.txt to be 3D)
   static Future<void> show3DPyramid() async {
-    const String urlPrefix = "http://lg1:81";
-
     await SSHService.execute("""
 echo '<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
@@ -57,18 +50,16 @@ echo '<?xml version="1.0" encoding="UTF-8"?>
 </Document>
 </kml>' > /var/www/html/kml/pyramid.kml
 
-echo "$urlPrefix/kml/pyramid.kml" > /var/www/html/kmls.txt
+echo "$_x/kml/pyramid.kml" > /var/www/html/kmls.txt
 """);
 
-    // Wait for sync
+    
     await Future.delayed(const Duration(seconds: 2));
     await flyToHomeCity();
   }
 
-  // Button5: CLEAR PYRAMID (This cleans kmls.txt)
+  
   static Future<void> clearKml() async {
-    // 1. Clear kmls.txt so the Master stops broadcasting
-    // 2. Clear the file itself to be safe
     await SSHService.execute("""
 echo '' > /var/www/html/kmls.txt
 echo '<?xml version="1.0" encoding="UTF-8"?>
