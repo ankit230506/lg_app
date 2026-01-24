@@ -28,7 +28,6 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _loadSettings() async {
-    // Load saved settings if any
     _hostController.text = SSHService.host ?? 'lg1';
     _portController.text = SSHService.port?.toString() ?? '22';
     _usernameController.text = SSHService.username ?? 'lg';
