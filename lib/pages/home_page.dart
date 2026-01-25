@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _executeCommand(Future<void> Function() command, String commandName) async {
     if (!_isConnected) {
-      _showSnackBar('Not connected to LG. Please configure settings.', isError: true);
+      _showSnackBar('not connected to LG. Please configure settings.', isError: true);
       return;
     }
 
