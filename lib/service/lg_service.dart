@@ -41,11 +41,11 @@ class SSHService {
     }
   }
   
-  static Future<void> senlogo() async {
+  static Future<void> sendlogo() async {
     final logoscreen = 3;
     final kmlcontent = LGCommands.showLogo();
     await execute(
-      "echo '$kmlcontent' > /var/www/html/slave_${logoscreen}.kml"
+      "echo '$kmlcontent' > /var/www/html/kml/slave_${logoscreen}.kml"
     );
     await _forceRefresh();
   }

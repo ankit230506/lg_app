@@ -117,10 +117,11 @@ class _HomePageState extends State<HomePage> {
                 _buildActionButton(
                   icon: Icons.image,
                   label: 'Show LG Logo',
-                  onPressed: () => _executeCommand(LGCommands.showLogo, 'Show Logo'),
+                  onPressed: () => _executeCommand(() => SSHService.sendlogo(), 'Show Logo'),
                   color: Colors.red,
                 ),
                 const SizedBox(height: 12),
+           
                 _buildActionButton(
                   icon: Icons.change_history,
                   label: 'Show 3D Pyramid',
