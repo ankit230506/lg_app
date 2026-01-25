@@ -1,5 +1,6 @@
 //Let your app log into another machine {lg}
 import 'package:dartssh2/dartssh2.dart';
+import 'package:flutter_application1/commands/lg_commands.dart';
 
 class SSHService {
   static SSHClient? _client;
@@ -8,7 +9,6 @@ class SSHService {
   static String? username;
   static String? password;
 
-  /// Connect to LG system via SSH
   static Future<bool> connect({
     required String host,
     required int port,
@@ -16,16 +16,16 @@ class SSHService {
     required String password,
   }) async {
     try {
-      // Disconnect if already connected
+    
       await disconnect();
 
-      // Store credentials
+      
       SSHService.host = host;
       SSHService.port = port;
       SSHService.username = username;
       SSHService.password = password;
 
-      // Create SSH client
+      
       final socket = await SSHSocket.connect(host, port);
       _client = SSHClient(
         socket,
@@ -40,8 +40,23 @@ class SSHService {
       return false;
     }
   }
+  
+  static Future<void> senlogo() async {
+    final logoscreen = 3;
+    final kmlcontent = LGCommands.showLogo();
+    await execute(
+      "echo '$kmlcontent' > /var/www/html/slave_${logoscreen}.kml"
+    );
+    await _forceRefresh();
+  }
 
-  /// Disconnect from LG system
+
+
+  static Future <void> _forceRefresh() async {
+    await execute (
+    "echo 'refresh=true' > /tmp/query.txt" ); }
+
+ 
   static Future<void> disconnect() async {
     if (_client != null) {
       _client!.close();
@@ -49,12 +64,11 @@ class SSHService {
     }
   }
 
-  /// Check if connected
   static Future<bool> isConnected() async {
     return _client != null;
   }
 
-  /// Execute a command on the LG system
+  //Execute a command on the LG system
   static Future<String> execute(String command) async {
     if (_client == null) {
       throw Exception('Not connected to LG. Please connect first.');
@@ -68,10 +82,4 @@ class SSHService {
     }
   }
 
-  /// Execute multiple commands
-  static Future<void> executeMultiple(List<String> commands) async {
-    for (final command in commands) {
-      await execute(command);
-    }
-  }
 }

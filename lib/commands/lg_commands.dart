@@ -12,6 +12,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>
 <Document>
   <ScreenOverlay>
     <name>LG Logo</name>
+    <visibility>1</visibility>
     <Icon>
       <href>$_x/lg_logo.png</href>
     </Icon>
